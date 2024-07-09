@@ -1,0 +1,27 @@
+{
+  "name": "proshop-v2",
+  "version": "1.0.0",
+  "description": "Ecommerce application build with mern stack",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node backend/server.js",
+    "server": "nodemon backend/server.js",
+    "client": "npm start --prefix frontend",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "data:import":"node backend/seeder.js",
+    "data:destroy":"node backend/seeder.js -d"
+  },
+  "author": "Muhammad Naseem",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "colors": "^1.4.0",
+    "express": "^4.19.2",
+    "mongoose": "^8.4.5"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "dotenv": "^16.4.5"
+  }
+}

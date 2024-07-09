@@ -11,6 +11,8 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import HomeScreen from './Screens/HomeScreen';
 import ProductScreen from './Screens/ProductScreen';
+import {Provider} from 'react-redux';
+import Store from './Store';
 
 const router=createBrowserRouter(
   createRoutesFromElements(
@@ -24,7 +26,9 @@ const router=createBrowserRouter(
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router}/> 
+    <Provider store={Store}>
+          <RouterProvider router={router}/> 
+   </Provider>
   </React.StrictMode>
 );
 
