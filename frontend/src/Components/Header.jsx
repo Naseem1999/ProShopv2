@@ -1,12 +1,32 @@
 import React from 'react'
-import {Nav,Navbar,Container,Badge} from 'react-bootstrap'
+import {Nav,Navbar,Container,Badge, NavDropdown} from 'react-bootstrap'
 import {FaShoppingCart,FaUser} from 'react-icons/fa'
 import logo from '../assets/logo.png'
 import {LinkContainer} from 'react-router-bootstrap'
-import { useSelector } from 'react-redux';
+import { useSelector,useDispatch } from 'react-redux';
+import { useLogoutMutation } from '../slices/userApiSlice'
+import { logout } from '../slices/authSlice'
+import { useNavigate } from 'react-router-dom'
+
 
 const Header = () => {
   const { cartItems } = useSelector((state) => state.cart);
+  const { userInfo } = useSelector((state) => state.auth);
+  const navigate=useNavigate();
+  const dispatch=useDispatch();
+  const [LogoutApiCall]=useLogoutMutation();
+
+
+
+  const logoutHandler=async()=>{
+    try{
+      await LogoutApiCall().unwrap();
+      dispatch(logout());
+      navigate('/login')
+    }catch(err){
+      console.log("error")
+    }
+  }
 
   return (
     <header>
@@ -30,10 +50,20 @@ const Header = () => {
                   )}
                 </Nav.Link>
                 </LinkContainer>
-                <LinkContainer to='/login'>
+                {userInfo ? (
+                  <NavDropdown title={userInfo.name} id="username">
+                    <LinkContainer to='/profile'>
+                    <NavDropdown.Item>Profile</NavDropdown.Item>
+                    </LinkContainer>
+                    <NavDropdown.Item onClick={logoutHandler}>Logout</NavDropdown.Item>
+                  </NavDropdown>
+                ) : (
+                  <LinkContainer to='/login'>
                
-                <Nav.Link ><FaUser/> Sign in</Nav.Link>
-                </LinkContainer>
+                  <Nav.Link ><FaUser/> Sign in</Nav.Link>
+                  </LinkContainer>
+                )}
+                
             </Nav>
           </Navbar.Collapse>
         </Container>
