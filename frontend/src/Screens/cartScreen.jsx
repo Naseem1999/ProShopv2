@@ -24,6 +24,9 @@ const CartScreen = () => {
   }
 
   return (
+    <div className='container'>
+
+    
     <Row className='m-4'>
         <Col md={8}>
         <h1 style={{marginBottom:'20px'}}>Shopping Cart</h1>
@@ -88,6 +91,7 @@ const CartScreen = () => {
         </Card>
         </Col>
     </Row>
+    </div>
   )
 }
 

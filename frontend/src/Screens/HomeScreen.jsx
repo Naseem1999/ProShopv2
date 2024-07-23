@@ -7,7 +7,7 @@ const HomeScreen = () => {
 const {data:products ,isLoading,error}=useGetproductsQuery();
 
   return (
-    <div className='m-3'>
+    <div className='m-3 '>
 
       {isLoading ? (
         <Loader/>
