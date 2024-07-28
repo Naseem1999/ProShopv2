@@ -9,7 +9,6 @@ import { useGetUsersQuery ,useDeleteUserMutation} from "../../slices/userApiSlic
 const UserListScreen = () => {
 const {data:users,isLoading,error,refetch}=useGetUsersQuery();
 const [deleteUser,{isLoading:loadingDelete}]=useDeleteUserMutation();
-console.log(users)
 
 const deleteHandler=async(id)=>{
     if (window.confirm('Are you sure')) {

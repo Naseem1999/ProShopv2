@@ -11,6 +11,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import HomeScreen from './Screens/HomeScreen';
 import ProductScreen from './Screens/ProductScreen';
+import {HelmetProvider} from 'react-helmet-async'
 import {Provider} from 'react-redux';
 import Store from './Store';
 import CartScreen from './Screens/cartScreen';
@@ -33,6 +34,10 @@ const router=createBrowserRouter(
   createRoutesFromElements(
     <Route path='/' element={<App/>}>
       <Route index={true} path='/' element={<HomeScreen/>}></Route>
+      <Route  path='/page/:pageNumber' element={<HomeScreen/>}></Route>
+      <Route  path='/search/:keyword' element={<HomeScreen/>}></Route>
+      <Route  path='/search/:keyword/page/:pageNumber' element={<HomeScreen/>}></Route>
+
       <Route  path='/product/:id' element={<ProductScreen/>}></Route>
       <Route  path='/cart' element={<CartScreen/>}></Route>
       <Route path='/login' element={<LoginScreen/>}></Route>
@@ -48,6 +53,8 @@ const router=createBrowserRouter(
       <Route path='' element={<AdminRoute/>}>
             <Route path='/admin/orderlist' element={<OrderListScreen/>}></Route>
             <Route path='/admin/productlist' element={<ProductListScreen/>}></Route>
+            <Route path='/admin/productlist/:pageNumber' element={<ProductListScreen/>}></Route>
+
             <Route path='/admin/product/:id/edit' element={<ProductEditScreen/>}></Route>
             <Route path='/admin/userlist' element={<UserListScreen/>}></Route>
             <Route path='/admin/user/:id/edit' element={<UserEditScreen/>}></Route>
@@ -59,11 +66,13 @@ const router=createBrowserRouter(
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
+    <HelmetProvider>
     <Provider store={Store}>
       <PayPalScriptProvider>
           <RouterProvider router={router}/> 
       </PayPalScriptProvider>
         </Provider>
+        </HelmetProvider>
   </React.StrictMode>
 );
 

@@ -5,8 +5,13 @@ import Product from "../models/productModel.js";
 //@route Get /api/products
 //@access public
 const getProducts=asyncHandler(async(req,res)=>{
-    const products=await Product.find({});
-    res.json(products)
+  const PageSize=process.env.PAGINATION_LIMIT;
+  const page=Number(req.query.pageNumber) || 1;
+  const keyword=req.query.keyword ? {name :{$regex:req.query.keyword,$options:'i'}} : {};
+  const count =await Product.countDocuments({...keyword})
+    const products=await Product.find({...keyword}).limit(PageSize).skip(PageSize * (page-1));
+
+    res.json({products,page,pages:Math.ceil(count/PageSize)});
 })
 //@desc Fetch single product
 //@route Get /api/products/:id
@@ -79,5 +84,47 @@ const deleteProduct = asyncHandler(async (req, res) => {
     }
   });
 
+  // @desc  create a review
+// @route   POST /api/products/:id/review
+// @access  Private
+const createProductReview = asyncHandler(async (req, res) => {
+       const {rating,comment}=req.body;
+       const product=await Product.findById(req.params.id);
+       if(product){
+        const alreadyReviews=product.reviews.find((review)=>review.user.toString()  ===req.user._id.toString())   
+       
+       if(alreadyReviews){
+        res.status(400);
+        throw new Error("Product already reviewed")
+       }
+      
+       const review={
+        name:req.user.name,
+        rating:Number(rating),
+        comment,
+        user:req.user._id
+       }
+       product.reviews.push(review);
+       product.numReviews=product.reviews.length;
 
-export {getProductById,getProducts,createProduct,updateProduct,deleteProduct};
+      product.rating= product.reviews.reduce((acc,review)=>acc+review.rating,0)/product.reviews.length;
+      await product.save();
+      res.status(201).json({message:"review added"})
+      
+      }else{
+        res.status(404);
+        throw new Error("Resource not found")
+      }
+
+  });
+  // @desc  create a review
+// @route   POST /api/products/:id/review
+// @access  Private
+const getTopProducts = asyncHandler(async (req, res) => { 
+      const products=await Product.find({}).sort({rating:-1}).limit(3);
+      res.status(200).json(products)
+
+  });
+
+
+export {getProductById,getProducts,createProduct,updateProduct,deleteProduct,createProductReview,getTopProducts};
